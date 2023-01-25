@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.sql.Time;
+import java.time.LocalDateTime;
+
 import autonomous.CrossLineAuto;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
@@ -36,6 +39,7 @@ public class Robot extends TimedRobot {
 	private static Thread auton;
 	private static CameraServer camServer;
 	private static final int MJPG_STREAM_PORT = 115200;
+	private long startTime;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -114,17 +118,6 @@ public class Robot extends TimedRobot {
 
     
 		systems.inAuto = true;
-		String gameData = null;
-		gameData = DriverStation.getGameSpecificMessage();
-		
-		int i = 3;
-		while(gameData == null && i-->0) 
-		{
-			System.out.print("Game data was null\r\n");
-			gameData = DriverStation.getGameSpecificMessage();
-		}
-		System.out.println("robot.autonomousInit()  Game data is " + gameData);
-		
 		systems.resetAutoSystems();
 		
 		m_autoSelected = m_chooser.getSelected();
@@ -134,37 +127,9 @@ public class Robot extends TimedRobot {
 		
 		systems.instantiate();
 		systems.update();
-		
-		/*
-		while (gameData == null) {
-			gameData = DriverStation.getGameSpecificMessage();
-		}*/
-		
-		switch (m_autoSelected) {
-		case (kCustomAuto):
-			auton = new Thread(new CrossLineAuto());
-		
 
-		//default:
-			//if (gameData.charAt(0) == 'L') 
-				//auton = new Thread(new ThreeCubeLeftAuto());
-				//auton = new Thread(new DriveShootLeft());
-			//else 
-				//auton = new Thread(new ThreeCubeRightAuto());
-				//auton = new Thread(new DriveShootRight());
-
-			//System.out.println("No autonomous selected.");
-			break;
-			
-		}
+		startTime = System.currentTimeMillis();
 		
-		//auton = new Thread(new CrossLineAuto());
-		
-		//auton = new Thread(new MoveArmTest());
-		
-		//driveTrain.driveLine(60, 0, 140);
-		
-		auton.start();
 		
 		//systems.getDriveTrain().turnTo(90, 0.95, 5500);
 		//new AutonLine(systems.getDriveTrain(), systems.getNavX(), 60,140, 0).run();
@@ -178,16 +143,17 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
+	long currentTime = System.currentTimeMillis();
 
-        break;
-    }
+	if (currentTime - startTime < 1000)
+	{
+		driveTrain.arcadeDrive(0.5, 0, true);
+
+	} 
+	else 
+	{
+		driveTrain.arcadeDrive(0, 0);
+	}
   }
 
   /** This function is called once when teleop is enabled. */
