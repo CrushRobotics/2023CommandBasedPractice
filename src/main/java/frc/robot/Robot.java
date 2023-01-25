@@ -63,6 +63,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putString("DB/String 3", "");
 		SmartDashboard.putString("DB/String 4", "");
 		SmartDashboard.putString("DB/String 5", "");
+
 		SmartDashboard.putString("DB/String 6", "");
 		SmartDashboard.putString("DB/String 7", "");
 		SmartDashboard.putString("DB/String 8", "");
@@ -193,6 +194,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
 	System.out.println("Starting teleoperation...");
+	System.out.println("This is just a test!");
   }
 
   /** This function is called periodically during operator control. */
