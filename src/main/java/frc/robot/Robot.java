@@ -143,17 +143,17 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-	long currentTime = System.currentTimeMillis();
+    long currentTime = System.currentTimeMillis();
 
-	if (currentTime - startTime < 1000)
-	{
-		driveTrain.arcadeDrive(0.5, 0, true);
+    if (currentTime - startTime < 1000)
+    {
+      driveTrain.arcadeDrive(0.5, 0, true);
 
-	} 
-	else 
-	{
-		driveTrain.arcadeDrive(0, 0);
-	}
+    } 
+    else 
+    {
+      driveTrain.arcadeDrive(0, 0);
+    }
   }
 
   /** This function is called once when teleop is enabled. */
@@ -168,6 +168,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 		systems.inAuto = false;
 		systems.update();
+    
 		//systems.printEncoderInfo(true, false, false, SysObj.Sensors.ARM_ENCODER_1);
 		//systems.printEncoderInfo(true, false, false, SysObj.Sensors.ARM_ENCODER_2);
 		//systems.printEncoderInfo(true, false, false, SysObj.Sensors.LEFT_ENCODER);
