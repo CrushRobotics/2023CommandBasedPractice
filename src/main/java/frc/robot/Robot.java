@@ -18,6 +18,7 @@ import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -69,7 +70,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
   
-    
+    /* 
 		systems = Systems.getInstance();
 		collector = Systems.getCollector();
 		driveTrain = Systems.getDriveTrain();
@@ -77,6 +78,7 @@ public class Robot extends TimedRobot {
 		System.out.println("Okay got here...");
 		systems.resetEncoders();
 		systems.update();
+    */
 		
 		SmartDashboard.putString("DB/String 0", "");
 		SmartDashboard.putString("DB/String 1", "");
@@ -256,27 +258,53 @@ public class Robot extends TimedRobot {
     
 
     // Get joystick values
-    var leftJoystickXValue = stick.getRawAxis(0);
-    var leftJoystickYValue = stick.getRawAxis(1);
+    //var leftJoystickXValue = stick.getRawAxis(0);
+    //var leftJoystickYValue = stick.getRawAxis(1);
 
     // Set motor voltages. The ControlMode.PercentOutput tells the controller to 
     // expect a value in range of -1 to 1. 0 is stopped.  
-    leftController1.set(ControlMode.PercentOutput, leftJoystickYValue);
-    rightController1.set(ControlMode.PercentOutput, leftJoystickYValue);
+    //leftController1.set(ControlMode.PercentOutput, leftJoystickYValue);
+    //rightController1.set(ControlMode.PercentOutput, leftJoystickYValue);
+    var leftX = exampleXbox.getLeftX();
+    var leftY = exampleXbox.getLeftY();
 
+    leftController1.set(ControlMode.PercentOutput, leftX + leftY);
+    rightController1.set(ControlMode.PercentOutput, leftX - leftY);
+
+    /*if(leftY != 0)
+    {
+      leftController1.set(ControlMode.PercentOutput, leftY);
+      rightController1.set(ControlMode.PercentOutput, -leftY);
+    }
+
+    if(leftX != 0)
+    {
+      leftController1.set(ControlMode.PercentOutput, leftX);
+      rightController1.set(ControlMode.PercentOutput, leftX);
+    }*/
+
+    /*leftController1.set(ControlMode.PercentOutput, triggerAmount);
+    rightController1.set(ControlMode.PercentOutput, -triggerAmount);*/
+
+    /* 
     if(exampleXbox.getAButton() == true)
     {
       leftController1.set(ControlMode.PercentOutput, 1);
+      rightController1.set(ControlMode.PercentOutput, 1);
     }
     else if(exampleXbox.getBButton() == true)
     {
       leftController1.set(ControlMode.PercentOutput, -1);
+      rightController1.set(ControlMode.PercentOutput, -1);
+
     }
     else
     {
       leftController1.set(ControlMode.PercentOutput, 0);
-    }
+      rightController1.set(ControlMode.PercentOutput, 0);
 
+    }
+    */
   }
 
   /** This function is called once when the robot is disabled. */
