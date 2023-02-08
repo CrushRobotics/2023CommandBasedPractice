@@ -56,6 +56,8 @@ public class Robot extends TimedRobot {
 
   private Joystick stick;
 
+  XboxController exampleXbox;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -89,6 +91,12 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putString("DB/String 9", "");
 		SmartDashboard.putData("Auto choices", m_chooser);
 		System.out.println("Initializing robot!");
+
+    exampleXbox = new XboxController(0); // 0 is the USB Port to be used as indicated on the Driver Station
+
+
+
+
 		/* 
 		visionCam = new UsbCamera("cam0", 1);
 		visionCam.setVideoMode(PixelFormat.kYUYV, 320, 240, 15);  // start ObjectDetect	
@@ -256,6 +264,18 @@ public class Robot extends TimedRobot {
     leftController1.set(ControlMode.PercentOutput, leftJoystickYValue);
     rightController1.set(ControlMode.PercentOutput, leftJoystickYValue);
 
+    if(exampleXbox.getAButton() == true)
+    {
+      leftController1.set(ControlMode.PercentOutput, 1);
+    }
+    else if(exampleXbox.getBButton() == true)
+    {
+      leftController1.set(ControlMode.PercentOutput, -1);
+    }
+    else
+    {
+      leftController1.set(ControlMode.PercentOutput, 0);
+    }
 
   }
 
