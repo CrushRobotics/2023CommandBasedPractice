@@ -41,6 +41,16 @@ public class Robot extends TimedRobot {
 	private static final int MJPG_STREAM_PORT = 115200;
 	private long startTime;
 
+  private TalonSRX leftController1;
+  private TalonSRX leftController2;
+  private TalonSRX leftController3;
+
+  private TalonSRX rightController1;
+  private TalonSRX rightController2;
+  private TalonSRX rightController3;
+
+  private Joystick stick;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -84,6 +94,54 @@ public class Robot extends TimedRobot {
     CameraServer.addCamera(visionCam);
     CameraServer.startAutomaticCapture();
 */
+
+
+    //
+    // The TalonSRX motor controller documentation can be found here:
+    // https://store.ctr-electronics.com/content/api/java/html/classcom_1_1ctre_1_1phoenix_1_1motorcontrol_1_1can_1_1_talon_s_r_x.html
+    //
+    
+    // Set up motor controllers. The motor controllers are the 'brains' behind 
+    // the motors themselves. They listen to our commands and tell the motors
+    // to operate at higher or lower speeds and in different directions.
+
+    // There are 3 motors on the left side of the robot's drive train and 
+    // 3 motors on its right. Each motor has a motor controller responsible
+    // for its function. That gives us 6 total motor controllers. 
+
+    // When we construct the motor controllers we have to pass the CAN bus ID
+    // that we've programmed the motor to attach to. This is a unique identifier
+    // used only by that motor controller.
+    leftController1 = new TalonSRX(2);
+    leftController2 = new TalonSRX(4);
+    leftController3 = new TalonSRX(6);
+
+    rightController1 = new TalonSRX(1);
+    rightController2 = new TalonSRX(3);
+    rightController3 = new TalonSRX(5);
+
+    // The 3 motors on the left side must work in concert with one another. That
+    // is, they must operate at the same speeds because their gears are interlocked.
+    // The same holds true for the 3 motors on the right side of the robot. 
+    // We can get the motors on the left and right sides to operate at the same speeds
+    // by instructing two of the motor controllers to follow the other one.
+
+    // This tells 2 of the left motor controllers to follow the first left motor controller. 
+    leftController2.follow(leftController1);
+    leftController3.follow(leftController1);
+
+    // This tells 2 of the right motor controllers to follow the first right motor controller.
+    rightController2.follow(rightController1);
+    rightController3.follow(rightController1);
+
+    // Set netural modes to brake so that robot doesn't move when joysticks 
+    // are at 0 position.
+    leftController1.setNeutralMode(NeutralMode.Brake);
+    leftController2.setNeutralMode(NeutralMode.Brake);
+    leftController3.setNeutralMode(NeutralMode.Brake);
+    rightController1.setNeutralMode(NeutralMode.Brake);
+    rightController2.setNeutralMode(NeutralMode.Brake);
+    rightController3.setNeutralMode(NeutralMode.Brake);
   }
 
   /**
@@ -166,8 +224,11 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+
+    /*
 		systems.inAuto = false;
 		systems.update();
+    */
     
 		//systems.printEncoderInfo(true, false, false, SysObj.Sensors.ARM_ENCODER_1);
 		//systems.printEncoderInfo(true, false, false, SysObj.Sensors.ARM_ENCODER_2);
@@ -180,52 +241,6 @@ public class Robot extends TimedRobot {
 		//systems.printEncoderInfo(true, false, false, SysObj.Sensors.ARM_ENCODER_1);
 		//systems.printEncoderInfo(true, false, false, SysObj.Sensors.ARM_ENCODER_2);
     
-    //
-    // The TalonSRX motor controller documentation can be found here:
-    // https://store.ctr-electronics.com/content/api/java/html/classcom_1_1ctre_1_1phoenix_1_1motorcontrol_1_1can_1_1_talon_s_r_x.html
-    //
-    
-    // Set up motor controllers. The motor controllers are the 'brains' behind 
-    // the motors themselves. They listen to our commands and tell the motors
-    // to operate at higher or lower speeds and in different directions.
-
-    // There are 3 motors on the left side of the robot's drive train and 
-    // 3 motors on its right. Each motor has a motor controller responsible
-    // for its function. That gives us 6 total motor controllers. 
-
-    // When we construct the motor controllers we have to pass the CAN bus ID
-    // that we've programmed the motor to attach to. This is a unique identifier
-    // used only by that motor controller.
-    var leftController1 = new TalonSRX(2);
-    var leftController2 = new TalonSRX(4);
-    var leftController3 = new TalonSRX(6);
-
-    var rightController1 = new TalonSRX(1);
-    var rightController2 = new TalonSRX(3);
-    var rightController3 = new TalonSRX(5);
-
-    // The 3 motors on the left side must work in concert with one another. That
-    // is, they must operate at the same speeds because their gears are interlocked.
-    // The same holds true for the 3 motors on the right side of the robot. 
-    // We can get the motors on the left and right sides to operate at the same speeds
-    // by instructing two of the motor controllers to follow the other one.
-
-    // This tells 2 of the left motor controllers to follow the first left motor controller. 
-    leftController2.follow(leftController1);
-    leftController3.follow(leftController1);
-
-    // This tells 2 of the right motor controllers to follow the first right motor controller.
-    rightController2.follow(rightController1);
-    rightController3.follow(rightController1);
-
-    // Set netural modes to brake so that robot doesn't move when joysticks 
-    // are at 0 position.
-    leftController1.setNeutralMode(NeutralMode.Brake);
-    leftController2.setNeutralMode(NeutralMode.Brake);
-    leftController3.setNeutralMode(NeutralMode.Brake);
-    rightController1.setNeutralMode(NeutralMode.Brake);
-    rightController2.setNeutralMode(NeutralMode.Brake);
-    rightController3.setNeutralMode(NeutralMode.Brake);
 
     // Get joystick values
     var leftJoystickXValue = stick.getRawAxis(0);
