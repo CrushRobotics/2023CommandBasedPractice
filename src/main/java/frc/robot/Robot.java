@@ -261,7 +261,8 @@ public class Robot extends TimedRobot {
 
     // Set motor voltages. The ControlMode.PercentOutput tells the controller to 
     // expect a value in range of -1 to 1. 0 is stopped.  
-    leftController1.set(ControlMode.PercentOutput, leftJoystickYValue);
+    
+    /*leftController1.set(ControlMode.PercentOutput, leftJoystickYValue);
     rightController1.set(ControlMode.PercentOutput, leftJoystickYValue);
 
     if(exampleXbox.getAButton() == true)
@@ -275,7 +276,11 @@ public class Robot extends TimedRobot {
     else
     {
       leftController1.set(ControlMode.PercentOutput, 0);
-    }
+    }*/
+
+    //sets the left wheels to the left stick Y axis and the right wheels to the right stick Y axis
+    leftController1.set(controlMode.PercentOutput, getLeftY);
+    rightController1.set(controlMode.PercentOutput, -getRightY);
 
   }
 
