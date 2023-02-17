@@ -285,8 +285,12 @@ public class Robot extends TimedRobot {
     }*/
 
     //sets the left wheels to the left stick Y axis and the right wheels to the right stick Y axis
-    leftController1.set(controlMode.PercentOutput, getLeftY);
-    rightController1.set(controlMode.PercentOutput, -getRightY);
+    var leftY = exampleXbox.getLeftY();
+    var rightY = exampleXbox.getRightY();
+
+    
+    leftController1.set(ControlMode.PercentOutput, leftY);
+    rightController1.set(ControlMode.PercentOutput, -rightY);
 
   }
 
