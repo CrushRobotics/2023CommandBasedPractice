@@ -57,6 +57,10 @@ public class Robot extends TimedRobot {
 
   private Joystick stick;
 
+  private AHRS ahrs;
+
+  private boolean balanceMode = false;
+
   XboxController exampleXbox;
 
   /**
@@ -96,7 +100,8 @@ public class Robot extends TimedRobot {
 
     exampleXbox = new XboxController(0); // 0 is the USB Port to be used as indicated on the Driver Station
 
-
+    ahrs = new AHRS(SPI.Port.kMXP); 
+      // Alternatives:  SPI.Port.kMXP, I2C.Port.kMXP or SerialPort.Port.kUSB   SerialPort.Port.kMXP
 
 
 		/* 
@@ -292,6 +297,41 @@ public class Robot extends TimedRobot {
     leftController1.set(ControlMode.PercentOutput, leftY);
     rightController1.set(ControlMode.PercentOutput, -rightY);
 
+    if(exampleXbox.getAButtonReleased() == true)
+    {
+      if(balanceMode == false)
+      {
+        balanceMode = true;
+
+      }
+      else
+      {
+        balanceMode = false;
+      }
+    }
+    if(balanceMode == true)
+    {
+      balance();
+    }
+  }
+
+  private void balance()
+  {
+    float pitch = ahrs.getPitch();
+
+    if(pitch > 5 || pitch < -5)
+    {
+      if(pitch > 5)
+      {
+        leftController1.set(controlMode.PercentOutput, 0.1);
+        rightController1.set(controlMode.PercentOutput, -0.1);
+      }
+      if(pitch < -5)
+      {
+        leftController1.set(controlMode.PercentOutput, -0.1);
+        rightController1.set(controlMode.PercentOutput, 0.1);
+      }
+    }
   }
 
   /** This function is called once when the robot is disabled. */
