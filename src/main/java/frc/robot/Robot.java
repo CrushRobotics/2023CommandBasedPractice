@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
 
 import autonomous.CrossLineAuto;
 import edu.wpi.first.cameraserver.CameraServer;
@@ -17,6 +18,7 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -294,8 +296,11 @@ public class Robot extends TimedRobot {
     var rightY = exampleXbox.getRightY();
 
     
-    leftController1.set(ControlMode.PercentOutput, leftY);
-    rightController1.set(ControlMode.PercentOutput, -rightY);
+
+    SmartDashboard.putBoolean("Balance Mode", balanceMode);
+    SmartDashboard.putNumber("Pitch", ahrs.getPitch());
+    SmartDashboard.putNumber("Roll", ahrs.getRoll());
+    SmartDashboard.putNumber("Yaw", ahrs.getYaw());
 
     if(exampleXbox.getAButtonReleased() == true)
     {
@@ -313,24 +318,34 @@ public class Robot extends TimedRobot {
     {
       balance();
     }
+    else 
+    {
+      leftController1.set(ControlMode.PercentOutput, leftY);
+      rightController1.set(ControlMode.PercentOutput, -rightY);
+    }
   }
 
   private void balance()
   {
-    float pitch = ahrs.getPitch();
+    float roll = ahrs.getRoll();
 
-    if(pitch > 5 || pitch < -5)
+    if(roll > 5 || roll < -5)
     {
-      if(pitch > 5)
+      if(roll > 5)
       {
-        leftController1.set(controlMode.PercentOutput, 0.1);
-        rightController1.set(controlMode.PercentOutput, -0.1);
+        leftController1.set(ControlMode.PercentOutput, -0.2);
+        rightController1.set(ControlMode.PercentOutput, 0.2);
       }
-      if(pitch < -5)
+      if(roll < -5)
       {
-        leftController1.set(controlMode.PercentOutput, -0.1);
-        rightController1.set(controlMode.PercentOutput, 0.1);
+        leftController1.set(ControlMode.PercentOutput, 0.2);
+        rightController1.set(ControlMode.PercentOutput, -0.2);
       }
+    }
+    else
+    {
+      leftController1.set(ControlMode.PercentOutput, 0);
+      rightController1.set(ControlMode.PercentOutput, 0);
     }
   }
 
