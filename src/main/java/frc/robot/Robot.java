@@ -59,6 +59,7 @@ public class Robot extends TimedRobot {
 
   private Joystick stick;
 
+  // declares our ahrs variable, which we use for the gyroscope functions
   private AHRS ahrs;
 
   private boolean balanceMode = false;
@@ -302,6 +303,11 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Roll", ahrs.getRoll());
     SmartDashboard.putNumber("Yaw", ahrs.getYaw());
 
+    /* 
+    * if else statement to determine whether the robot is in "balance mode"
+    * balance mode will automatically balance the robot. balance mode is on a toggle
+    * set to the "A" button 
+    */
     if(exampleXbox.getAButtonReleased() == true)
     {
       if(balanceMode == false)
@@ -318,6 +324,11 @@ public class Robot extends TimedRobot {
     {
       balance();
     }
+    /* 
+    * if robot is not in balance mode, it will read the analogue sticks
+    * this check is in place so that the analogue stick output value does 
+    * not conflict with our balance mode output value
+    */
     else 
     {
       leftController1.set(ControlMode.PercentOutput, leftY);
@@ -325,10 +336,18 @@ public class Robot extends TimedRobot {
     }
   }
 
+  // our balance mode method for the robot
   private void balance()
   {
+    // sets the roll value from the gyroscope to a variable
     float roll = ahrs.getRoll();
 
+    /*
+     * if the roll value is outside of a certain range, the robot will go
+     * forwards or backwards to automatically balance itself
+     * 
+     * if the roll value is outside of that range, it will stop
+     */
     if(roll > 5 || roll < -5)
     {
       if(roll > 5)
